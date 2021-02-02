@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "gsap": "^3.6.0",
+    "three": "^0.125.2",
+    "webpack": "^5.0.0",
+    "worker-loader": "^3.0.7"
+  }
+}
