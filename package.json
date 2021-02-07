@@ -4,5 +4,8 @@
     "three": "^0.125.2",
     "webpack": "^5.0.0",
     "worker-loader": "^3.0.7"
+  },
+  "devDependencies": {
+    "webpack-cli": "^4.4.0"
   }
 }
