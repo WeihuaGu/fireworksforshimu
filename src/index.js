@@ -44,7 +44,7 @@ var song = () => {
 	camera.add(listener);
 
 	var sound = new THREE.Audio(listener); //创建声音并绑定对应的收听器
-	sound.load('../sound/boom.mp3'); //一些配置
+	sound.load('/fireworksforshimu/sound/boom.mp3'); //一些配置
 	sound.setLoop(true);
 	return sound;
 }
