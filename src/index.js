@@ -1,5 +1,6 @@
 var objects = {}
 var boomflag = false;
+var doneflag = false;
 var vl = 1000;
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -43,9 +44,17 @@ var song = () => {
 	var listener = new THREE.AudioListener(); //创建一个收听器并加入到摄像机中，声音的效果会随着摄像机的改变而改变
 	camera.add(listener);
 
-	var sound = new THREE.Audio(listener); //创建声音并绑定对应的收听器
-	sound.load('/fireworksforshimu/sound/boom.mp3'); //一些配置
-	sound.setLoop(true);
+	var sound = new THREE.PositionalAudio(listener); //创建声音并绑定对应的收听器
+	var audioLoader = new THREE.AudioLoader();
+	// 加载音频文件，返回一个音频缓冲区对象作为回调函数参数
+	audioLoader.load('/fireworksforshimu/sound/boom.mp3', function(AudioBuffer) {
+		// console.log(buffer);
+		// 音频缓冲区对象关联到音频对象audio
+		PosAudio.setBuffer(AudioBuffer);
+		PosAudio.setVolume(0.9); //音量
+		PosAudio.setRefDistance(200); //参数值越大,声音越大
+		PosAudio.play(); //播放
+	});
 	return sound;
 }
 var fallText = () => {
@@ -109,6 +118,8 @@ var animate = () => {
 }
 
 var pointUpdate = () => {
+	if (doneflag)
+		return;
 	var delta = 10 * clock.getDelta();
 	delta = delta < 2 ? delta : 2;
 	var dur = new Date().getTime() - t1;
@@ -137,6 +148,7 @@ var boom = () => {
 		child.position.x = fsin(child.position.y) * 0.1 * Math.random();
 		child.position.z = fsin(child.position.y) * 0.1 * Math.random();
 	});
+	doneflag = true;
 }
 bindCanvas(renderer);
 sceneAdd();
