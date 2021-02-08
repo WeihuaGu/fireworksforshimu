@@ -1,6 +1,7 @@
 var objects = {}
 var boomflag = false;
 var doneflag = false;
+var stopflag = false;
 var vl = 1000;
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -14,7 +15,6 @@ var speed = 2;
 var bindCanvas = (renderer) => {
 	renderer.setSize(window.innerWidth, window.innerHeight); //设置渲染区域尺寸
 	document.body.appendChild(renderer.domElement);
-	console.log("winheight" + window.innerHeight);
 }
 
 function fsin(x) { //正弦函数
@@ -95,10 +95,7 @@ var pointAnimate = (vertices) => {
 			}
 
 		});
-	} catch (error) {
-		//console.log(error);
-		//发生错误执行的代码 
-	}
+	} catch (error) {}
 }
 
 
@@ -115,21 +112,31 @@ var animate = () => {
 }
 
 var pointUpdate = () => {
-	if (doneflag)
+	if (stopflag)
 		return;
-	var delta = 10 * clock.getDelta();
-	delta = delta < 2 ? delta : 2;
-	var dur = new Date().getTime() - t1;
+	if (doneflag) {
+		boomdur = new Date().getTime() - objects['boomtime'];
+		if (boomdur < 1000)
+			return;
+		else {
+			objects['pointsgroup'].traverse(function(child) {
+				stopflag = true;
+				child.position.y = -10;
+
+			});
+		}
+
+
+	}
 	if (boomflag)
 		boom();
 	else
 		objects['pointsgroup'].traverse(function(child) {
-			if (child.position.y < 7) {
+			if (child.position.y < 6.5) {
 				child.position.y += speed * Math.random() * 0.08;
 
 			} else {
 				boomflag = true;
-				console.log("boomflag" + boomflag);
 				return;
 			}
 		});
@@ -145,6 +152,7 @@ var boom = () => {
 		child.position.z = fsin(child.position.y) * 0.1 * Math.random();
 	});
 	doneflag = true;
+	objects['boomtime'] = new Date().getTime();
 }
 bindCanvas(renderer);
 sceneAdd();
