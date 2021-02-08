@@ -13,7 +13,7 @@ var speed = 2;
 var bindCanvas = (renderer) => {
 	renderer.setSize(window.innerWidth, window.innerHeight); //设置渲染区域尺寸
 	document.body.appendChild(renderer.domElement);
-	console.log("winheight"+window.innerHeight);
+	console.log("winheight" + window.innerHeight);
 }
 
 function fsin(x) { //正弦函数
@@ -39,6 +39,15 @@ var addPoints = () => {
 
 }
 
+var song = () => {
+	var listener = new THREE.AudioListener(); //创建一个收听器并加入到摄像机中，声音的效果会随着摄像机的改变而改变
+	camera.add(listener);
+
+	var sound = new THREE.Audio(listener); //创建声音并绑定对应的收听器
+	sound.load('../sound/boom.mp3'); //一些配置
+	sound.setLoop(true);
+	return sound;
+}
 var fallText = () => {
 	var loader = new THREE.FontLoader();
 
@@ -121,6 +130,8 @@ var pointUpdate = () => {
 }
 
 var boom = () => {
+	var sound = song();
+	objects['pointsgroup'].add(sound);
 	objects['pointsgroup'].traverse(function(child) {
 		child.position.y -= fsin(child.position.y) * Math.random() * 0.1;
 		child.position.x = fsin(child.position.y) * 0.1 * Math.random();
