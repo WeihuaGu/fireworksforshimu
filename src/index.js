@@ -45,17 +45,14 @@ var song = () => {
 	camera.add(listener);
 
 	var sound = new THREE.PositionalAudio(listener); //创建声音并绑定对应的收听器
+	objects['pointsgroup'].add(sound);
 	var audioLoader = new THREE.AudioLoader();
-	// 加载音频文件，返回一个音频缓冲区对象作为回调函数参数
 	audioLoader.load('/fireworksforshimu/sound/boom.mp3', function(AudioBuffer) {
-		// console.log(buffer);
-		// 音频缓冲区对象关联到音频对象audio
-		PosAudio.setBuffer(AudioBuffer);
-		PosAudio.setVolume(0.9); //音量
-		PosAudio.setRefDistance(200); //参数值越大,声音越大
-		PosAudio.play(); //播放
+		sound.setBuffer(AudioBuffer);
+		sound.setVolume(0.9); //音量
+		sound.setRefDistance(200); //参数值越大,声音越大
+		sound.play(); //播放
 	});
-	return sound;
 }
 var fallText = () => {
 	var loader = new THREE.FontLoader();
@@ -141,8 +138,7 @@ var pointUpdate = () => {
 }
 
 var boom = () => {
-	var sound = song();
-	objects['pointsgroup'].add(sound);
+	song();
 	objects['pointsgroup'].traverse(function(child) {
 		child.position.y -= fsin(child.position.y) * Math.random() * 0.1;
 		child.position.x = fsin(child.position.y) * 0.1 * Math.random();
